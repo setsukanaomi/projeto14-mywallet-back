@@ -30,4 +30,22 @@ export async function transaction(req, res) {
   }
 }
 
-export async function listUserTransactions(req, res) {}
+export async function listUserTransactions(req, res) {
+  const { authorization } = req.headers;
+  const token = authorization?.replace("Bearer ", "");
+
+  if (!token) return res.sendStatus(401);
+
+  try {
+    const user = await db.collection("sessions").findOne({ token });
+    if (!user) res.sendStatus(401);
+
+    const transactions = await db
+      .collection("transactions")
+      .find({ $or: [{ userId: user.userId }] })
+      .toArray();
+    res.send(transactions);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
