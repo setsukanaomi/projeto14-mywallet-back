@@ -29,9 +29,13 @@ export async function signin(req, res) {
     if (!correctPassword) return res.sendStatus(401);
 
     const token = uuid();
+    const data = {
+      token: token,
+      name: user.name,
+    };
     await db.collection("sessions").deleteMany({ userId: user._id });
     await db.collection("sessions").insertOne({ token, userId: user._id });
-    res.status(200).send(token);
+    res.status(200).send(data);
   } catch (error) {
     res.status(500).send(error.message);
   }
