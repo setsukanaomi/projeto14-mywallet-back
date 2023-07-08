@@ -13,6 +13,7 @@ export async function transaction(req, res) {
     const transaction = {
       userId: user.userId,
       type: tipo,
+      date: dayjs().format("DD/MM"),
       value,
       description,
     };
