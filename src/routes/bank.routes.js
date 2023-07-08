@@ -5,9 +5,8 @@ import { validateToken } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validateSchema.js";
 
 const bankRouter = Router();
-bankRouter.use(validateToken);
 
-bankRouter.post("/nova-transacao/:tipo", validateSchema(transactionSchema), transaction);
-bankRouter.get("/home", listUserTransactions);
+bankRouter.post("/nova-transacao/:tipo", validateToken, validateSchema(transactionSchema), transaction);
+bankRouter.get("/home", validateToken, listUserTransactions);
 
 export default bankRouter;

@@ -3,12 +3,14 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
 export async function signup(req, res) {
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password } = req.body;
 
   const hash = bcrypt.hashSync(password, 10);
+
   try {
     const emailExists = await db.collection("users").findOne({ email });
     if (emailExists) return res.sendStatus(409);
+
     await db.collection("users").insertOne({ name, email, password: hash });
     res.sendStatus(201);
   } catch (error) {
@@ -26,7 +28,7 @@ export async function signin(req, res) {
     const correctPassword = bcrypt.compareSync(password, user.password);
     if (!correctPassword) return res.sendStatus(401);
 
-    const token = uuid();
+    const token = { token: uuid() };
     await db.collection("sessions").deleteMany({ userId: user._id });
     await db.collection("sessions").insertOne({ token, userId: user._id });
     res.status(200).send(token);
