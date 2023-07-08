@@ -12,7 +12,8 @@ export async function transaction(req, res) {
 
   try {
     const transaction = {
-      userId: user.userId,
+      userId: user._id,
+      name: user.name,
       type: tipo,
       date: dayjs().format("DD/MM"),
       value,
@@ -32,7 +33,7 @@ export async function listUserTransactions(req, res) {
   try {
     const transactions = await db
       .collection("transactions")
-      .find({ $or: [{ userId: user.userId }] })
+      .find({ $or: [{ userId: user._id }] })
       .toArray();
 
     res.send(transactions);
