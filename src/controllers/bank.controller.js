@@ -13,7 +13,6 @@ export async function transaction(req, res) {
   try {
     const transaction = {
       userId: user._id,
-      name: user.name,
       type: tipo,
       date: dayjs().format("DD/MM"),
       value,
