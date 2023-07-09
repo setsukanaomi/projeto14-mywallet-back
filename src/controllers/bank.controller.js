@@ -33,6 +33,7 @@ export async function listUserTransactions(req, res) {
     const transactions = await db
       .collection("transactions")
       .find({ $or: [{ userId: user._id }] })
+      .sort({ $natural: -1 })
       .toArray();
 
     res.send(transactions);
